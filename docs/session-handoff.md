@@ -1,6 +1,6 @@
 # OpenClaw Fork - Session Handoff
 
-## 最新状态（2026-04-07 Session 2）
+## 最新状态（2026-04-07 Session 6）
 
 ### 项目背景
 
@@ -15,30 +15,42 @@
 4. **Telegram 频道** — 已配置、已配对（user id: 8182698647）、已验证收发消息
 5. **飞书频道** — 已有配置，插件已注册（doc/chat/wiki/drive/bitable）
 6. **配置修复** — `openclaw doctor --fix` 迁移旧配置格式，手动清理残留字段
-7. **多 Agent 路由** — 日常助手（Sonnet）+ 编码助手（Opus）
-8. **4 个自定义 Skills** — chinese_assistant, daily_briefing, content_creator, feishu_workspace
+7. **多 Agent 路由** — 4 个 Agent：日常助手（Sonnet）、编码助手（Opus）、内容创作（Sonnet）、研究助手（Sonnet）
+8. **6 个自定义 Skills** — chinese_assistant, daily_briefing, content_creator, feishu_workspace, weekly_report, hot_topic_scan
 9. **Workspace 人设** — IDENTITY.md, SOUL.md, BOOT.md, USER.md, TOOLS.md, HEARTBEAT.md, MEMORY.md, AGENTS.md
-10. **清理与重命名** — 删除旧自建项目（本地 + GitHub），GitHub 仓库 `openclaw` → `claude_openclaw_XD`，git remote 已更新
+10. **清理与重命名** — 删除旧自建项目（本地 + GitHub），GitHub 仓库 `openclaw` → `claude_openclaw_XD`，git remote 已更新，本地目录已重命名
 11. **Dashboard i18n** — 确认 OpenClaw Dashboard 已内置 13 语言支持（含简体中文），可在 Overview 页面切换
+12. **同步上游 Fork** — 已同步两次：初次 2026-04-07 + Session 5 再次同步（37 commits，含 plugin boundary、dreaming、dedup refactors 等）
+13. **3 个 Cron Jobs** — daily-briefing(09:00)、hot-topic-scan(10:00)、weekly-report(周五18:00)，全部 announce 到飞书群 HH Email推送(oc_6cb183ccb932ea6b4330a58c22f0d387)
+14. **Dashboard 全模块测试** — 聊天、频道（Telegram 在线）、代理（4个）、技能（6 个自定义）、定时任务（3 个）均正常
+15. **企业微信插件安装** — `@wecom/wecom-openclaw-plugin` v2026.4.3 已安装，Bot 模式（WebSocket），待配置凭证（Bot ID + Secret）
 
 ### 当前运行状态
 
 - Gateway: `http://127.0.0.1:18789` (v2026.4.5)
 - Dashboard: `http://127.0.0.1:18789/?token=<gateway_token>`
-- Telegram: 已连接，dmPolicy=pairing, groupPolicy=open
+- Telegram: 已连接，polling 模式，dmPolicy=pairing, groupPolicy=open
 - 飞书: 已连接，websocket 模式
+- 企业微信: 插件已安装，待配置凭证
+- Cron: 已启用，3 个任务（daily-briefing 09:00 / hot-topic-scan 10:00 / weekly-report 周五18:00 → 飞书 HH Email推送）
+- Gateway 启动方式: `openclaw gateway start`（Windows 计划任务）
 
-### 待手动完成
+### 暂缓
 
-- **本地目录重命名**: `ren "D:\AI\Claude\openclaw" "claude_openclaw_XD"`（Claude Code 进程锁定，需关闭会话后执行）
+- **企业微信** — 插件已安装（`@wecom/wecom-openclaw-plugin` v2026.4.3），但需要企业微信管理后台账号。用户当前微信未关联企业，注册需营业执照+审核。Agent 模式还需公网回调 URL。条件成熟后只需填凭证+重启 Gateway 即可启用。
+
+### 已知问题
+
+- **Gateway restart 超时** — Windows 上 `openclaw gateway restart` 会报 60s 超时，但实际 Gateway 已正常启动。原因是旧进程残留导致 CLI 健康检查计时器超时。可忽略，用 `curl http://127.0.0.1:18789/health` 确认即可。
 
 ### 下一步
 
-1. **Dashboard 测试** — 通过 Dashboard UI 测试各模块（Channels/Sessions/Skills/Agents/Cron Jobs）
-2. **Cron Job** — 创建每日简报定时任务
-3. **企业微信** — 在 openclaw.json 中启用 WeChat 频道
+1. **Dashboard 验证新配置** — 通过 Dashboard 确认 4 个 Agent、6 个自定义 Skill、3 个 Cron Job 在 UI 上都正常显示
+2. **Cron 实际验证** — 等待明天 09:00/10:00 自动触发，确认飞书群 HH Email推送 收到消息
+3. **Agent 路由测试** — 在飞书/Telegram 测试内容创作和研究助手是否正确路由
 4. **Fork 管理** — 定期 `git fetch upstream && git merge upstream/main`
 5. **上游贡献** — 将通用改进 PR 回 openclaw/openclaw
+6. **企业微信（待条件成熟）** — 注册企业微信 → 创建自建应用 → 获取凭证 → 填入配置
 
 ### 关键文件
 
@@ -49,7 +61,8 @@
 | `~/.openclaw/workspace/IDENTITY.md` | Claw 身份 |
 | `~/.openclaw/workspace/SOUL.md` | 爆款操盘手人设 |
 | `~/.openclaw/workspace/BOOT.md` | Gateway 启动检查 |
-| `~/.openclaw/workspace/skills/` | 4 个自定义 skills |
+| `~/.openclaw/workspace/skills/` | 6 个自定义 skills |
+| `~/.openclaw/cron/jobs.json` | 3 个 cron 任务定义 |
 | `d:\AI\Claude\claude_openclaw_XD\` | Fork 本地副本（开发用） |
 
 ### 旧项目
