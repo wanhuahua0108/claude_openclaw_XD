@@ -157,17 +157,14 @@ vi.mock("../media-understanding/runtime.js", () => ({
   transcribeAudioFile: (...args: unknown[]) => mocks.transcribeAudioFile(...args),
 }));
 
-vi.mock("../../extensions/memory-core/src/memory/embeddings.js", () => ({
-  createEmbeddingProvider: (...args: unknown[]) => mocks.createEmbeddingProvider(...args),
-}));
-
 vi.mock("../plugins/memory-embedding-providers.js", () => ({
   listMemoryEmbeddingProviders: (...args: unknown[]) => mocks.listMemoryEmbeddingProviders(...args),
   registerMemoryEmbeddingProvider: (...args: unknown[]) =>
     mocks.registerMemoryEmbeddingProvider(...args),
 }));
 
-vi.mock("../../extensions/memory-core/src/memory/provider-adapters.js", () => ({
+vi.mock("../../extensions/memory-core/runtime-api.js", () => ({
+  createEmbeddingProvider: (...args: unknown[]) => mocks.createEmbeddingProvider(...args),
   registerBuiltInMemoryEmbeddingProviders: (...args: unknown[]) =>
     mocks.registerBuiltInMemoryEmbeddingProviders(...args),
 }));

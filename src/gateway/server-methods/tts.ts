@@ -93,12 +93,18 @@ export const ttsHandlers: GatewayRequestHandlers = {
       const providerRaw = typeof params.provider === "string" ? params.provider.trim() : undefined;
       const modelId = typeof params.modelId === "string" ? params.modelId.trim() : undefined;
       const voiceId = typeof params.voiceId === "string" ? params.voiceId.trim() : undefined;
-      const overrides = resolveExplicitTtsOverrides({
-        cfg,
-        provider: providerRaw,
-        modelId,
-        voiceId,
-      });
+      let overrides;
+      try {
+        overrides = resolveExplicitTtsOverrides({
+          cfg,
+          provider: providerRaw,
+          modelId,
+          voiceId,
+        });
+      } catch (err) {
+        respond(false, undefined, errorShape(ErrorCodes.INVALID_REQUEST, formatForLog(err)));
+        return;
+      }
       const result = await textToSpeech({
         text,
         cfg,
