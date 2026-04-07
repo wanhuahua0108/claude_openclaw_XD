@@ -44,11 +44,6 @@ function createProps(overrides: Partial<ChatProps> = {}): ChatProps {
     canSend: true,
     disabledReason: null,
     error: null,
-    voiceActive: false,
-    voiceState: "idle",
-    voiceTranscript: "",
-    voiceError: null,
-    voicePlaybackEnabled: true,
     sessions: {
       ts: 0,
       path: "",

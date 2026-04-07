@@ -18,7 +18,6 @@ type OpenAIRealtimeTranscriptionProviderConfig = {
   model?: string;
   silenceDurationMs?: number;
   vadThreshold?: number;
-  inputAudioFormat?: string;
 };
 
 type OpenAIRealtimeTranscriptionSessionConfig = RealtimeTranscriptionSessionCreateRequest & {
@@ -26,7 +25,6 @@ type OpenAIRealtimeTranscriptionSessionConfig = RealtimeTranscriptionSessionCrea
   model: string;
   silenceDurationMs: number;
   vadThreshold: number;
-  inputAudioFormat: string;
 };
 
 type RealtimeEvent = {
@@ -53,7 +51,6 @@ function normalizeProviderConfig(
     model: trimToUndefined(raw?.model) ?? trimToUndefined(raw?.sttModel),
     silenceDurationMs: asFiniteNumber(raw?.silenceDurationMs),
     vadThreshold: asFiniteNumber(raw?.vadThreshold),
-    inputAudioFormat: trimToUndefined(raw?.inputAudioFormat),
   };
 }
 
@@ -119,7 +116,7 @@ class OpenAIRealtimeTranscriptionSession implements RealtimeTranscriptionSession
         this.sendEvent({
           type: "transcription_session.update",
           session: {
-            input_audio_format: this.config.inputAudioFormat,
+            input_audio_format: "g711_ulaw",
             input_audio_transcription: {
               model: this.config.model,
             },
@@ -244,7 +241,6 @@ export function buildOpenAIRealtimeTranscriptionProvider(): RealtimeTranscriptio
         model: config.model ?? "gpt-4o-transcribe",
         silenceDurationMs: config.silenceDurationMs ?? 800,
         vadThreshold: config.vadThreshold ?? 0.5,
-        inputAudioFormat: config.inputAudioFormat ?? "g711_ulaw",
       });
     },
   };

@@ -72,19 +72,6 @@ export type AppViewState = {
   chatStream: string | null;
   chatStreamStartedAt: number | null;
   chatRunId: string | null;
-  chatVoiceActive: boolean;
-  chatVoiceState:
-    | "idle"
-    | "connecting"
-    | "listening"
-    | "processing"
-    | "speaking"
-    | "interrupted"
-    | "error";
-  chatVoiceTranscript: string;
-  chatVoiceRunId: string | null;
-  chatVoicePlaybackEnabled: boolean;
-  chatVoiceError: string | null;
   compactionStatus: CompactionStatus | null;
   fallbackStatus: FallbackStatus | null;
   chatAvatarUrl: string | null;
