@@ -1,6 +1,6 @@
 # OpenClaw Fork - Session Handoff
 
-## 最新状态（2026-04-07 Session 6）
+## 最新状态（2026-04-09 Session 7）
 
 ### 项目背景
 
@@ -24,6 +24,7 @@
 13. **3 个 Cron Jobs** — daily-briefing(09:00)、hot-topic-scan(10:00)、weekly-report(周五18:00)，全部 announce 到飞书群 HH Email推送(oc_6cb183ccb932ea6b4330a58c22f0d387)
 14. **Dashboard 全模块测试** — 聊天、频道（Telegram 在线）、代理（4个）、技能（6 个自定义）、定时任务（3 个）均正常
 15. **企业微信插件安装** — `@wecom/wecom-openclaw-plugin` v2026.4.3 已安装，Bot 模式（WebSocket），待配置凭证（Bot ID + Secret）
+16. **Cron Delivery 修复** — 飞书 Bot「HH小助手」加入「HH Email推送」群后，delivery 从 400 error 恢复为 delivered。daily-briefing 手动触发验证通过，完整简报已发送到群
 
 ### 当前运行状态
 
@@ -45,9 +46,9 @@
 
 ### 下一步
 
-1. **Dashboard 验证新配置** — 通过 Dashboard 确认 4 个 Agent、6 个自定义 Skill、3 个 Cron Job 在 UI 上都正常显示
-2. **Cron 实际验证** — 等待明天 09:00/10:00 自动触发，确认飞书群 HH Email推送 收到消息
-3. **Agent 路由测试** — 在飞书/Telegram 测试内容创作和研究助手是否正确路由
+1. **Cron 自动触发验证** — 观察明天 09:00/10:00 自动触发是否正常（手动触发已验证通过）
+2. **Agent 路由测试** — 在飞书/Telegram 测试 creator 和 researcher agent 是否正确路由
+3. **飞书日历/任务集成** — 简报中提示需飞书 OAuth 连接才能读取日历/任务数据，可考虑配置
 4. **Fork 管理** — 定期 `git fetch upstream && git merge upstream/main`
 5. **上游贡献** — 将通用改进 PR 回 openclaw/openclaw
 6. **企业微信（待条件成熟）** — 注册企业微信 → 创建自建应用 → 获取凭证 → 填入配置

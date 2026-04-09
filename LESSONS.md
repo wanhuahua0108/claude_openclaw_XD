@@ -9,8 +9,11 @@
 ## OpenClaw 运维
 
 - `openclaw.json` 严格校验，未知字段会阻止 Gateway 启动，改完用 `openclaw doctor --fix`
-- cron jobs 通过 CLI/Dashboard 创建，不在 JSON 配置中定义
+- cron jobs 通过 CLI/Dashboard 创建，也可直接编辑 `~/.openclaw/cron/jobs.json`（调度器会热加载）
+- CLI 创建 cron 在 Windows 上可能卡住，直接编辑 jobs.json 更可靠
 - 升级后必须手动重启 Gateway 进程（kill + run）
+- Windows 上 `openclaw gateway restart` 可能报 60s 超时，但 Gateway 实际已启动，用 `curl http://127.0.0.1:18789/health` 确认
+- Gateway RPC 方法（cron.add 等）走 WebSocket，不是 HTTP REST API
 - Windows PowerShell 中 `openclaw` 命令可能显示 `>>` 续行提示，用完整 node 路径或 `.cmd` 后缀
 - Dashboard 需要带 token 访问：`http://127.0.0.1:18789/?token=<gateway_token>`
 - Telegram 频道首次使用需要 pairing：`openclaw pairing approve telegram <code>`
