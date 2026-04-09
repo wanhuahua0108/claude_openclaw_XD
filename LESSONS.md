@@ -23,6 +23,11 @@
 - npm 包版本经常不准确，安装前最好先 `pnpm view <pkg> versions` 确认
 - pnpm 10.x 的 `onlyBuiltDependencies` 需要在根 package.json 的 `pnpm` 字段中配置
 
+## 飞书集成
+
+- 飞书 Bot 必须先加入目标群，才能通过 API 向该群发消息，否则飞书 API 返回 400。在 cron announce 配置飞书群 ID 前，确认 Bot 已经是群成员
+- 排查 delivery 失败时，先检查 Bot 是否在目标群，再看其他原因
+
 ## 工作流
 
 - 先建骨架、逐包编译验证，再组装集成，比一次性写完所有代码更高效

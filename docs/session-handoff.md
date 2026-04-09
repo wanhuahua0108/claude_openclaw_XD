@@ -1,6 +1,6 @@
 # OpenClaw Fork - Session Handoff
 
-## 最新状态（2026-04-09 Session 7）
+## 最新状态（2026-04-09 Session 8）
 
 ### 项目背景
 
@@ -25,6 +25,9 @@
 14. **Dashboard 全模块测试** — 聊天、频道（Telegram 在线）、代理（4个）、技能（6 个自定义）、定时任务（3 个）均正常
 15. **企业微信插件安装** — `@wecom/wecom-openclaw-plugin` v2026.4.3 已安装，Bot 模式（WebSocket），待配置凭证（Bot ID + Secret）
 16. **Cron Delivery 修复** — 飞书 Bot「HH小助手」加入「HH Email推送」群后，delivery 从 400 error 恢复为 delivered。daily-briefing 手动触发验证通过，完整简报已发送到群
+17. **Cron 自动触发验证** — 确认 daily-briefing (09:00) 和 hot-topic-scan (10:00) 按时自动触发，内容生成正常。4/9 09:00 前因 Bot 不在群导致 delivery 失败，修复后 hot-topic-scan 错误状态已手动清理
+18. **Dashboard Agent 测试** — 4 个 Agent 全部通过 Dashboard 独立测试：main(Sonnet)、coder(Opus)、creator(Sonnet)、researcher(Sonnet)，各 Agent 正确识别自身身份和模型
+19. **Agent 路由 Bindings** — 已配置 3 条路由规则：Telegram DM → coder(Opus)、飞书群 HH Email → creator、飞书 DM → main。Gateway 重启后配置生效，待频道实际测试验证
 
 ### 当前运行状态
 
@@ -46,8 +49,8 @@
 
 ### 下一步
 
-1. **Cron 自动触发验证** — 观察明天 09:00/10:00 自动触发是否正常（手动触发已验证通过）
-2. **Agent 路由测试** — 在飞书/Telegram 测试 creator 和 researcher agent 是否正确路由
+1. **频道路由测试** — 在 Telegram DM 发消息验证 coder(Opus) 路由、在飞书群发消息验证 creator 路由、在飞书 DM 验证 main 路由。Bindings 已配置，Gateway 已重启，待实际发消息验证
+2. **Cron delivery 持续观察** — 明天 09:00/10:00 自动触发应该正常（Bot 已在群、错误状态已清理）
 3. **飞书日历/任务集成** — 简报中提示需飞书 OAuth 连接才能读取日历/任务数据，可考虑配置
 4. **Fork 管理** — 定期 `git fetch upstream && git merge upstream/main`
 5. **上游贡献** — 将通用改进 PR 回 openclaw/openclaw
