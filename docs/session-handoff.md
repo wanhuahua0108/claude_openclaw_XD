@@ -1,6 +1,6 @@
 # OpenClaw Fork - Session Handoff
 
-## 最新状态（2026-04-09 Session 8）
+## 最新状态（2026-04-09 Session 9）
 
 ### 项目背景
 
@@ -28,6 +28,9 @@
 17. **Cron 自动触发验证** — 确认 daily-briefing (09:00) 和 hot-topic-scan (10:00) 按时自动触发，内容生成正常。4/9 09:00 前因 Bot 不在群导致 delivery 失败，修复后 hot-topic-scan 错误状态已手动清理
 18. **Dashboard Agent 测试** — 4 个 Agent 全部通过 Dashboard 独立测试：main(Sonnet)、coder(Opus)、creator(Sonnet)、researcher(Sonnet)，各 Agent 正确识别自身身份和模型
 19. **Agent 路由 Bindings** — 已配置 3 条路由规则：Telegram DM → coder(Opus)、飞书群 HH Email → creator、飞书 DM → main。Gateway 重启后配置生效，待频道实际测试验证
+20. **Channel Routing 端到端验证（Session 9）** — 3 条路由规则全部验证通过：Telegram(OK, 449ms)、Feishu(OK, WebSocket)、3 个 Agent 均正确响应并识别自身身份
+21. **Cron 投递状态确认（Session 9）** — 确认 4/8-4/9 的 AxiosError 400 根因是 Bot 未入群（Session 7 已修复）。修复后 daily-briefing 投递成功，hot-topic-scan 明天应恢复正常
+22. **Feishu 日历集成评估（Session 9）** — 评估完成：当前无日历 OAuth scope、无现有日历插件，需 (1) 飞书开放平台添加 calendar:calendar:readonly 权限 (2) 重新授权 user token (3) 开发 feishu-calendar.js 脚本
 
 ### 当前运行状态
 
@@ -49,12 +52,13 @@
 
 ### 下一步
 
-1. **频道路由测试** — 在 Telegram DM 发消息验证 coder(Opus) 路由、在飞书群发消息验证 creator 路由、在飞书 DM 验证 main 路由。Bindings 已配置，Gateway 已重启，待实际发消息验证
-2. **Cron delivery 持续观察** — 明天 09:00/10:00 自动触发应该正常（Bot 已在群、错误状态已清理）
-3. **飞书日历/任务集成** — 简报中提示需飞书 OAuth 连接才能读取日历/任务数据，可考虑配置
-4. **Fork 管理** — 定期 `git fetch upstream && git merge upstream/main`
-5. **上游贡献** — 将通用改进 PR 回 openclaw/openclaw
-6. **企业微信（待条件成熟）** — 注册企业微信 → 创建自建应用 → 获取凭证 → 填入配置
+1. ~~**频道路由测试**~~ ✓ Session 9 已验证通过
+2. **Cron delivery 持续观察** — 4/10 09:00/10:00 自动触发应正常；周五 18:00 weekly-report 首次运行待观察
+3. **飞书日历集成（进行中）** — 需在飞书开放平台添加 calendar 权限 → 重新授权 → 开发 feishu-calendar.js
+4. **Feishu 错误信息增强（建议）** — Feishu 插件的 AxiosError 400 丢失了飞书 API 错误码，建议增强 error extraction
+5. **Fork 管理** — 定期 `git fetch upstream && git merge upstream/main`
+6. **上游贡献** — 将通用改进 PR 回 openclaw/openclaw
+7. **企业微信（待条件成熟）** — 注册企业微信 → 创建自建应用 → 获取凭证 → 填入配置
 
 ### 关键文件
 

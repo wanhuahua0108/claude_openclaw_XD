@@ -18,6 +18,14 @@
 - Dashboard 需要带 token 访问：`http://127.0.0.1:18789/?token=<gateway_token>`
 - Telegram 频道首次使用需要 pairing：`openclaw pairing approve telegram <code>`
 
+## Agent 路由
+
+- OpenClaw 的多 Agent 路由是 **bindings 配置驱动**（确定性匹配 channel + peer），不是关键词或 LLM 分类
+- 没有 bindings 时所有消息走 default agent；需要在 `openclaw.json` 顶层添加 `bindings` 数组
+- 路由优先级：exact peer > wildcard peer > account > channel > default
+- Cron announce 不经过路由，binding 不影响 cron delivery
+- Dashboard 可通过 URL `?session=agent:<agentId>:main` 直接测试任意 agent
+
 ## 工具
 
 - npm 包版本经常不准确，安装前最好先 `pnpm view <pkg> versions` 确认
@@ -27,6 +35,8 @@
 
 - 飞书 Bot 必须先加入目标群，才能通过 API 向该群发消息，否则飞书 API 返回 400。在 cron announce 配置飞书群 ID 前，确认 Bot 已经是群成员
 - 排查 delivery 失败时，先检查 Bot 是否在目标群，再看其他原因
+- 飞书 Lark SDK 的 AxiosError 会吞掉 API 返回的实际错误码（如 230001 bot not in chat），只显示 `status code 400`。排查时需看 `err.response?.data` 而非 error message
+- 飞书 user_access_token 有效期仅约 2 小时，必须记录获取时间戳并实现 refresh_token 自动刷新
 
 ## 工作流
 
