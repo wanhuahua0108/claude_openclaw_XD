@@ -1,6 +1,6 @@
 # OpenClaw Fork - Session Handoff
 
-## 最新状态（2026-04-09 Session 9）
+## 最新状态（2026-04-10 Session 9 续）
 
 ### 项目背景
 
@@ -31,6 +31,9 @@
 20. **Channel Routing 端到端验证（Session 9）** — 3 条路由规则全部验证通过：Telegram(OK, 449ms)、Feishu(OK, WebSocket)、3 个 Agent 均正确响应并识别自身身份
 21. **Cron 投递状态确认（Session 9）** — 确认 4/8-4/9 的 AxiosError 400 根因是 Bot 未入群（Session 7 已修复）。修复后 daily-briefing 投递成功，hot-topic-scan 明天应恢复正常
 22. **Feishu 日历集成评估（Session 9）** — 评估完成：当前无日历 OAuth scope、无现有日历插件，需 (1) 飞书开放平台添加 calendar:calendar:readonly 权限 (2) 重新授权 user token (3) 开发 feishu-calendar.js 脚本
+23. **feishu-calendar.js 脚本开发（Session 9）** — 完成日历读取脚本，支持今日/指定日期/本周日程查询，自动刷新 token，--json 输出。路径：`~/.openclaw/workspace/scripts/feishu-calendar.js`
+24. **飞书应用 v1.0.4 发布（Session 9）** — 在飞书开放平台添加 `calendar:calendar:readonly` 权限并发布版本 1.0.4（免审核，已生效）
+25. **OAuth 重新授权（待完成）** — 应用层面权限已开通，但 user_access_token 是在添加日历权限之前生成的，不含 calendar scope。需重新走 OAuth 授权流程获取含日历 scope 的新 token。redirect_uri 需先在安全设置中配置
 
 ### 当前运行状态
 
@@ -54,7 +57,11 @@
 
 1. ~~**频道路由测试**~~ ✓ Session 9 已验证通过
 2. **Cron delivery 持续观察** — 4/10 09:00/10:00 自动触发应正常；周五 18:00 weekly-report 首次运行待观察
-3. **飞书日历集成（进行中）** — 需在飞书开放平台添加 calendar 权限 → 重新授权 → 开发 feishu-calendar.js
+3. **飞书日历集成 — OAuth 重新授权（最高优先）** — 脚本已写好、应用权限已发布，还差最后一步：
+   - 在飞书开放平台「安全设置」中配置 redirect_uri（如 `http://localhost:3000/callback`）
+   - 用新的 OAuth URL 重新授权用户，获取含 `calendar:calendar:readonly` scope 的 user_access_token
+   - 将新 token 写入 `~/.openclaw/workspace/feishu_user_token.json`
+   - 运行 `node ~/.openclaw/workspace/scripts/feishu-calendar.js` 验证
 4. **Feishu 错误信息增强（建议）** — Feishu 插件的 AxiosError 400 丢失了飞书 API 错误码，建议增强 error extraction
 5. **Fork 管理** — 定期 `git fetch upstream && git merge upstream/main`
 6. **上游贡献** — 将通用改进 PR 回 openclaw/openclaw

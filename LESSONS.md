@@ -37,6 +37,9 @@
 - 排查 delivery 失败时，先检查 Bot 是否在目标群，再看其他原因
 - 飞书 Lark SDK 的 AxiosError 会吞掉 API 返回的实际错误码（如 230001 bot not in chat），只显示 `status code 400`。排查时需看 `err.response?.data` 而非 error message
 - 飞书 user_access_token 有效期仅约 2 小时，必须记录获取时间戳并实现 refresh_token 自动刷新
+- 飞书应用新增 API 权限后需要「创建版本」并「发布」才能生效（免审核权限提交即生效）
+- 飞书 OAuth user_access_token 的 scope 在授权时确定，刷新 token 不会获得新 scope。应用新增权限后必须让用户重新走 OAuth 授权流程
+- 飞书 OAuth 授权的 redirect_uri 必须在「安全设置」中预先配置，否则返回 20029 错误
 
 ## 工作流
 
