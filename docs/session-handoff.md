@@ -1,6 +1,6 @@
 # OpenClaw Fork - Session Handoff
 
-## 最新状态（2026-04-10 Session 11）
+## 最新状态（2026-04-10 Session 12）
 
 ### 项目背景
 
@@ -41,6 +41,12 @@
 23. **OAuth 工具脚本（Session 10）** — `~/.openclaw/workspace/scripts/feishu-oauth.js` 创建，支持自动启动回调服务器 + 浏览器授权 + token 保存，显式请求 calendar scope
 24. **AJV 栈溢出修复（Session 11）** — 升级 OpenClaw 2026.4.5 → 2026.4.9 修复了 Gateway config 读取时 ajv schema 验证器的递归栈溢出。根因：plugin provider snapshot 递归加载（upstream #61922, #61938, #61946, #61951）。升级后 Gateway 干净启动，无 `Maximum call stack size exceeded`，插件只注册一次（之前注册 3 次）
 25. **Cron 恢复确认（Session 11）** — Gateway 升级后 3 个 cron job 全部恢复 ok 状态。weekly-report 在重启后自动补跑（missed job recovery），daily-briefing 和 hot-topic-scan 下次按时触发
+26. **Cron 自动触发全面验证（Session 12）** — 3 个 cron job 在 4/10 全部自动触发并投递成功：
+    - hot-topic-scan 10:00 准时触发（升级 2026.4.9 后首次正常自动触发）
+    - daily-briefing 14:07 触发（Gateway 重启后补跑）
+    - weekly-report 18:09 触发（missed job recovery 补跑）
+    - 全部 `consecutiveErrors: 0`，`lastDeliveryStatus: delivered`
+    - **AJV 栈溢出问题彻底关闭**
 
 ### 当前运行状态
 
@@ -59,17 +65,16 @@
 ### 已知问题
 
 - **Gateway restart 超时** — Windows 上 `openclaw gateway restart` 偶尔报 60s 超时，但实际 Gateway 已正常启动。原因是启动阶段（~26s 加载插件）CLI 健康检查计时器超时。可忽略，等完全启动后 `openclaw gateway status` 即可确认 `RPC probe: ok`。
-- ~~**Config read 栈溢出（Session 10）**~~ — **已修复（Session 11）**。升级到 2026.4.9 后修复。根因是 plugin provider snapshot 递归加载，upstream PRs #61922/#61938/#61946/#61951。
+- ~~**Config read 栈溢出（Session 10）**~~ — **已修复（Session 11）**，Cron 自动触发验证通过（Session 12）。彻底关闭。
 - **wecom-openclaw-plugin SDK 兼容警告** — `OPENCLAW_PLUGIN_SDK_COMPAT_DEPRECATED` 警告，不影响功能，需等 wecom 插件作者迁移到新 SDK subpath imports。
 - **Skills symlink 警告** — 9 个 openclaw-managed skills 因 symlink 解析到 `~/.agents/skills/` 而被跳过。这些 skills 通过 `.agents` 路径加载，功能不受影响。
 
 ### 下一步（最高优先）
 
-1. **观察 Cron 自动触发** — 明天 09:00 daily-briefing、10:00 hot-topic-scan 应按时触发并投递到飞书群。如正常则 AJV 问题彻底关闭
-2. **Fork 同步** — 当前 fork 落后 upstream，定期 `git fetch upstream && git merge upstream/main`
+1. **Fork 同步** — 当前 fork 落后 upstream，定期 `git fetch upstream && git merge upstream/main`
+2. **Security audit** — `openclaw security audit` 报告 5 个 CRITICAL（groupPolicy=open），建议收紧 Telegram/飞书的 groupPolicy 为 allowlist
 3. **wecom 插件升级** — 等待 `@wecom/wecom-openclaw-plugin` 发布兼容 2026.4.9 SDK 的新版本
-4. **Security audit** — `openclaw security audit` 报告 5 个 CRITICAL（groupPolicy=open），建议收紧 Telegram/飞书的 groupPolicy 为 allowlist
-5. **企业微信（待条件成熟）** — 注册企业微信 → 创建自建应用 → 获取凭证 → 填入配置
+4. **企业微信（待条件成熟）** — 注册企业微信 → 创建自建应用 → 获取凭证 → 填入配置
 
 ### 关键文件
 
